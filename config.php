@@ -4,7 +4,7 @@ $host = 'localhost';
 $username = 'root'; 
 $password = '';     
 
-$dbname1 = 'rfid';
+$dbname1 = 'employee_locating_system';
 $dbname2 = 'employee_locating_system';
 
 try {
