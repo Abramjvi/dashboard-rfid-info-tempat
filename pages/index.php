@@ -1,18 +1,3 @@
-<?php
-session_start();
-
-// Set header cache-control untuk mencegah caching
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
-header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
-
-// Periksa apakah pengguna sudah login
-if (!isset($_SESSION['user_id'])) {
-    header('Location: /dashboard-rfid-employee/pages/index.php?alert=' . urlencode('Anda harus login terlebih dahulu!'));
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
