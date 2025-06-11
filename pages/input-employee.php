@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -212,7 +211,7 @@
         });
     });
 
-    // Fungsi untuk mengirim data karyawan baru
+    // Fungsi untuk mengirim data karyawan baru dan update status RFID
     function submitNewEmployee() {
       const name = document.getElementById('inputEmployeeName').value;
       const npk = document.getElementById('inputEmployeeNpk').value;
@@ -226,7 +225,7 @@
         return;
       }
 
-      // Kirim data ke backend
+      // Kirim data karyawan ke backend
       fetch('add_employee_data.php', {
         method: 'POST',
         headers: {
@@ -242,19 +241,35 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            resultMessage.innerHTML = `<p class="text-success">Karyawan baru '${name}' berhasil ditambahkan! Halaman akan diperbarui dalam 2 detik.</p>`;
+            // Jika penambahan karyawan berhasil, update status RFID
+            return fetch('update_rfid_status.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                rfid: rfid
+              })
+            });
+          } else {
+            throw new Error(`Kesalahan saat menambahkan karyawan: ${data.message}`);
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            resultMessage.innerHTML = `<p class="text-success">Karyawan baru '${name}' berhasil ditambahkan dan status RFID diperbarui! Halaman akan diperbarui dalam 2 detik.</p>`;
             resultModal.show();
             setTimeout(() => {
               window.location.reload();
             }, 2000);
           } else {
-            resultMessage.innerHTML = `<p class="text-danger">Kesalahan saat menambahkan karyawan: ${data.message}</p>`;
-            resultModal.show();
+            throw new Error(`Kesalahan saat memperbarui status RFID: ${data.message}`);
           }
         })
         .catch(error => {
-          console.error('Kesalahan saat menambahkan karyawan:', error);
-          resultMessage.innerHTML = '<p class="text-danger">Kesalahan saat menambahkan data karyawan. Silakan coba lagi.</p>';
+          console.error('Kesalahan:', error);
+          resultMessage.innerHTML = `<p class="text-danger">${error.message || 'Kesalahan saat menambahkan data karyawan atau memperbarui RFID. Silakan coba lagi.'}</p>`;
           resultModal.show();
         });
     }

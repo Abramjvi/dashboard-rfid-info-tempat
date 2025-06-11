@@ -1,4 +1,3 @@
-
 <?php
 header('Content-Type: application/json');
 header('Cache-Control: no-cache, must-revalidate');
@@ -6,7 +5,7 @@ header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 include '../config.php'; // Koneksi database menggunakan PDO
 
 try {
-    $stmt = $pdo_els->query('SELECT rfid FROM unknown_rfid ORDER BY rfid');
+    $stmt = $pdo_els->query('SELECT rfid FROM unknown_rfid WHERE sta IS NULL ORDER BY rfid');
     $rfids = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($rfids) {
